@@ -57,7 +57,7 @@ document.addEventListener('Folloze.ctaSubmit', function (e) {
    * Call sendData and replace the Javascript object with the fields corresponding to your Pardot fields.
    *
    * Refer to documentation for creating the form data object:
-   * 
+   * https://engage.folloze.com/technicalcenter/other-integrations/folloze-pardot-form-integration-technical-overview
    */
   sendData({
     first_name: e.detail.ctaData.name ?? '',
