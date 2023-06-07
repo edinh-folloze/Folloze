@@ -1,4 +1,9 @@
 /*
+ * Copyright Folloze. Licensed under the MIT License.
+ * See license text at https://github.com/edinh-folloze/Folloze/blob/main/LICENSE.md
+ */
+
+/*
  * Replace FORM_HANDLER_URL:
  * https://help.salesforce.com/s/articleView?id=sf.pardot_form_handlers_integrate_form_handler.htm
  */
@@ -6,7 +11,7 @@ var formUrl = 'FORM_HANDLER_URL';
 
 // Start Script
 // Listen for 'Folloze.ctaSubmit' custom event when a user submits a form on the website
-window.addEventListener('Folloze.ctaSubmit', function (e) {
+document.addEventListener('Folloze.ctaSubmit', function (e) {
 
   // Function to send data to the server
   function sendData(data) {
