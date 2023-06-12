@@ -60,9 +60,9 @@ document.addEventListener('Folloze.ctaSubmit', function (e) {
    * https://engage.folloze.com/technicalcenter/other-integrations/folloze-pardot-form-integration-technical-overview
    */
   sendData({
+    email: e.detail.ctaData.email ?? '',
     first_name: e.detail.ctaData.name ?? '',
     last_name: e.detail.ctaData.last_name ?? '',
-    email: e.detail.ctaData.email ?? '',
     phone: e.detail.ctaData.phone ?? '',
     company: e.detail.ctaData.company ?? '',
     job_title: e.detail.ctaData.job_title ?? '',
