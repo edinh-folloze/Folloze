@@ -1,0 +1,113 @@
+<!-- Start of HubSpot custom event tracking -->
+<script>
+  window.addEventListener('load', () => {
+    console.log("Window Loaded");
+    
+    var _hsq = window._hsq = window._hsq || [];
+
+    // identify the contact in HubSpot if lead is known
+    if(FollozeState.initialState.lead.email){
+      identifyContact(FollozeState.initialState.lead.email);
+    }
+
+    // track content item views
+    window.addEventListener('Folloze.pageview', e => {
+      if(e.detail.itemName){
+        createEvent(e.detail.location, e.detail.itemId, e.detail.itemName, 'Item View');
+      }
+    });
+
+    // track CTA clicks such as button clicks
+    window.addEventListener('Folloze.ctaClick', e => {
+      var data = e.detail.ctaData
+
+      switch(e.detail.ctaType){
+        case 'contact':
+          createEvent('', '', data.text, 'CTA Click - Contact');
+          break;
+        case 'registration':
+          createEvent('', data.form_id, data.text, 'CTA Click - Registration');
+          break;
+        case 'form':
+          createEvent('', data.form_id, data.text, 'CTA Click - Form');
+          break;
+        case 'message':
+          createEvent('', '', data.text, 'CTA Click - Send a Message');
+          break;
+        case 'new_tab':
+          createEvent(data.url, '', data.text, 'CTA Click - Open a URL');
+          break;
+        case 'inline':
+          createEvent(data.url, '', data.text, 'CTA Click - Open a URL');
+          break;
+        case 'share':
+          createEvent('', '', data.text, 'CTA Click - Share');
+          break;
+        case 'send_email_clicked':
+          createEvent(data.subject, '', data.text, 'CTA Click - Send an Email');
+          break;
+      }
+    });
+
+    // track CTA submissions such as registration or form submissions
+    window.addEventListener('Folloze.ctaSubmit', e => {
+      var data = e.detail.ctaData
+
+      switch(e.detail.ctaType){
+        case 'contact':
+          createEvent('', '', data.cta.label, 'CTA Submit - Contact');
+          identifyContact(data.email);
+          break;
+        case 'form':
+          createEvent('', data.form_id, data.cta.label, 'CTA Submit - Form Submit');
+          identifyContact(data.email);
+          break;
+        case 'registration':
+          createEvent('', data.form_id, data.cta.label, 'CTA Submit - Registration');
+          identifyContact(data.email);
+          break;
+        case 'message':
+          createEvent(data.message, '', data.cta.label, 'CTA Submit - Send a Message');
+          identifyContact(data.email);
+          break;
+        case 'share':
+          createEvent(data.invitee, '', data.cta.label, 'CTA Submit - Share');
+          break;
+      }
+    });
+
+    // track clicks on links that aren't CTAs such as hyperlinked images
+    window.addEventListener('Folloze.linkClick', e => {
+      createEvent(e.detail.url, '', '', 'Link Click');
+    });
+  })
+
+  // creates the HubSpot custom event using data from the Folloze custom activity
+  function createEvent(activityData, assetId, assetName, activityType){
+    console.log('Event Created');
+    _hsq.push([
+      'trackCustomBehavioralEvent',
+      {
+        name: "pe21775395_folloze_activity",
+        properties: {
+          // give each property a value so we know what they mean
+          folloze_activity_data: activityData,
+          folloze_asset_id: assetId,
+          folloze_asset_name: assetName,
+          folloze_board_name: FollozeState.initialState.board.name,
+          folloze_board_id: FollozeState.initialState.board.id,
+          folloze_activity_type: activityType,
+          hs_campaign_id: FollozeState.initialState.board.custom_attributes.campaign_id
+        },
+      },
+    ]);
+  }
+
+  function identifyContact(email){
+    _hsq.push(["identify",{
+      email: contactEmail
+    }]);
+    console.log('Contact Identified');
+  }
+</script>
+<!-- End of HubSpot custom event tracking -->
