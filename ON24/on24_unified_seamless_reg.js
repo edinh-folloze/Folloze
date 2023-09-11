@@ -1,6 +1,6 @@
 <script>
 // Listen for 'Folloze.ctaSubmit' custom event when a user submits a form on the website
-window.addEventListener('Folloze.ctaSubmit', function (e) {  
+window.addEventListener('Folloze.ctaSubmit', function (e) {
   function sendData(data) {
     console.log('Sending data');
 
@@ -20,8 +20,10 @@ window.addEventListener('Folloze.ctaSubmit', function (e) {
     XHR.open('POST', 'https://seamlessreg.on24.com/');
 
     XHR.onreadystatechange = function(){
-      if (XHR.readyState == 4 && XHR.status == 200)
-        callback(XHR.responseText);
+      if(FollozeState.initialState.board.custom_attributes.on24_redirect == 'true'){
+        window.open(`https://seamlessreg.on24.com/?eventid=${FollozeState.initialState.board.custom_attributes.on24_event_id}&key=${FollozeState.initialState.board.custom_attributes.on24_event_key}&firstname=${e.detail.ctaData.name}&lastname=${e.detail.ctaData.last_name}&company=${e.detail.ctaData.company}&email=${e.detail.ctaData.email}&jobtitle=${e.detail.ctaData.headline}`,'_blank');
+        location.reload();
+      }
     }
 
     // Add the required HTTP header for form data POST requests
@@ -32,6 +34,7 @@ window.addEventListener('Folloze.ctaSubmit', function (e) {
     console.log("Data sent:", urlEncodedData);
   }
 
+  if(e.detail.ctaType == 'registration'){
     // Call the 'sendData' function with the form data object. Make sure that it corresponds to the ON24 fields.
     sendData({
       eventid: FollozeState.initialState.board.custom_attributes.on24_event_id,
@@ -39,7 +42,10 @@ window.addEventListener('Folloze.ctaSubmit', function (e) {
       firstname: e.detail.ctaData.name,
       lastname: e.detail.ctaData.last_name,
       email: e.detail.ctaData.email,
-      company: e.detail.ctaData.company
+      company: e.detail.ctaData.company,
+      phone: e.detail.ctaData.phone,
+      jobtitle: e.detail.ctaData.headline
     });
+  }
 }, false);
 </script>
